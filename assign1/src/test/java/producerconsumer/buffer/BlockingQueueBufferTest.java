@@ -18,28 +18,6 @@ class BlockingQueueBufferTest {
     }
 
     @Test
-    void testBlockingOnFull() throws InterruptedException {
-        BlockingQueueBuffer<DataItem<Integer>> buffer = new BlockingQueueBuffer<>(1);
-        buffer.put(DataItem.normal(1));
-
-        // This should timeout because buffer is full
-        assertTimeoutPreemptively(Duration.ofMillis(100), () -> {
-            try {
-                // We can't easily test the blocking behavior without another thread consuming.
-                // But we can verify it doesn't return immediately if we were to check capacity
-                // (but queue handles it).
-                // Actually, for a single thread, trying to add to full queue BLOCKS.
-                // So expected behavior is it blocks. We can use Future or thread to verify it
-                // waits.
-                // However, without timeouts, it would hang test.
-                // Re-think: IsBlocking property? BlockingQueue handles it.
-                // Let's test that it eventually succeeds if another thread removes.
-            } catch (Exception e) {
-            }
-        });
-    }
-
-    @Test
     void testBlockingBehavior() {
         BlockingQueueBuffer<DataItem<Integer>> buffer = new BlockingQueueBuffer<>(1);
         assertTimeoutPreemptively(Duration.ofMillis(500), () -> {
